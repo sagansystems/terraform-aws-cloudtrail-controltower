@@ -3,9 +3,8 @@ terraform {
 
   required_providers {
     aws = {
-      source                = "hashicorp/aws"
-      version               = ">= 3.0"
-      configuration_aliases = [aws.audit, aws.log_archive]
+      source  = "hashicorp/aws"
+      version = ">= 3.0"
     }
     random = ">= 2.1"
     time   = "~> 0.6"
