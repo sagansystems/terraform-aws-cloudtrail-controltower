@@ -221,3 +221,9 @@ resource "lacework_integration_aws_ct" "default" {
 
   depends_on = [time_sleep.wait_time]
 }
+
+data "lacework_metric_module" "lwmetrics" {
+  count   = var.enable_metric_module ? 1 : 0
+  name    = local.module_name
+  version = local.module_version
+}

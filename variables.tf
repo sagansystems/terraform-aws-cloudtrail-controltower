@@ -102,3 +102,9 @@ variable "kms_key_arn" {
   default     = ""
   description = "The KMS key arn, if Control Tower was deployed with custom KMS key"
 }
+
+variable "enable_metric_module" {
+  type        = bool
+  default     = false
+  description = "Enable the metric module."
+}
