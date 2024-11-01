@@ -15,15 +15,18 @@ locals {
   module_version            = fileexists(local.version_file) ? file(local.version_file) : ""
 }
 
-data "aws_organizations_organization" "main" {}
+data "aws_organizations_organization" "main" {
+  provider = aws.audit
+}
 
 resource "random_id" "uniq" {
   byte_length = 4
 }
 
 resource "aws_sqs_queue" "lacework_cloudtrail_sqs_queue" {
-  name = local.sqs_queue_name
-  tags = var.tags
+  provider = aws.audit
+  name     = local.sqs_queue_name
+  tags     = var.tags
 }
 
 resource "aws_sqs_queue_policy" "lacework_sqs_queue_policy" {
@@ -165,6 +168,9 @@ resource "aws_iam_policy" "cross_account_policy" {
 }
 
 module "lacework_ct_iam_role" {
+  providers = {
+    aws = aws.log_archive
+  }
   source                  = "lacework/iam-role/aws"
   version                 = "~> 0.4"
   create                  = var.use_existing_iam_role ? false : true
