@@ -9,10 +9,10 @@ locals {
   iam_role_name = var.use_existing_iam_role ? var.iam_role_name : (
     length(var.iam_role_name) > 0 ? var.iam_role_name : "${var.prefix}-iam-${random_id.uniq.hex}"
   )
-  version_file   = "${abspath(path.module)}/VERSION"
+  version_file              = "${abspath(path.module)}/VERSION"
   lacework_integration_guid = lacework_integration_aws_ct.default.id
-  module_name    = "terraform-aws-cloudtrail-controltower"
-  module_version = fileexists(local.version_file) ? file(local.version_file) : ""
+  module_name               = "terraform-aws-cloudtrail-controltower"
+  module_version            = fileexists(local.version_file) ? file(local.version_file) : ""
 }
 
 data "aws_organizations_organization" "main" {
@@ -154,7 +154,7 @@ data "aws_iam_policy_document" "cross_account_policy" {
   version  = "2012-10-17"
   source_policy_documents = var.kms_key_arn == "" ? [
     data.aws_iam_policy_document.read_logs.json,
-  ]:[
+    ] : [
     data.aws_iam_policy_document.read_logs.json,
     data.aws_iam_policy_document.kms_decrypt.json
   ]
@@ -172,7 +172,7 @@ module "lacework_ct_iam_role" {
     aws = aws.log_archive
   }
   source                  = "lacework/iam-role/aws"
-  version                 = "~> 0.4"
+  version                 = "0.4.2"
   create                  = var.use_existing_iam_role ? false : true
   iam_role_name           = local.iam_role_name
   lacework_aws_account_id = var.lacework_aws_account_id
@@ -223,6 +223,7 @@ resource "lacework_integration_aws_ct" "default" {
 }
 
 data "lacework_metric_module" "lwmetrics" {
+  count   = var.enable_metric_module ? 1 : 0
   name    = local.module_name
   version = local.module_version
 }
