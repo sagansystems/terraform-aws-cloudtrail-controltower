@@ -172,7 +172,7 @@ module "lacework_ct_iam_role" {
     aws = aws.log_archive
   }
   source                  = "lacework/iam-role/aws"
-  version                 = "~> 0.4"
+  version                 = "0.4.2"
   create                  = var.use_existing_iam_role ? false : true
   iam_role_name           = local.iam_role_name
   lacework_aws_account_id = var.lacework_aws_account_id
@@ -220,9 +220,4 @@ resource "lacework_integration_aws_ct" "default" {
   }
 
   depends_on = [time_sleep.wait_time]
-}
-
-data "lacework_metric_module" "lwmetrics" {
-  name    = local.module_name
-  version = local.module_version
 }
